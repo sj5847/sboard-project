@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script>
+
+
+        window.onload = function() {
+
+            const formUser = document.getElementsByTagName('form')[0];
+            // const btnSubmit = document.getElementById('submit')[0];
+            const btnSubmit = formUser.querySelector('input[type="submit"]');
+
+            function checkUser(field) {
+                const uid = document.getElementById('userUid');
+                const email = document.getElementById('userNick');
+                const nick = document.getElementById('userEmail');
+
+                const userCheck = {
+                    uidExists : uid,
+                    emailExists : email,
+                    nickExists : nick
+                };
+
+                    fetch(`/sboard/user/check-user?value=${value}`,{
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(userCheck)
+                }
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.uidExists) {
+                                alert('아이디가 이미 존재합니다.');
+                            } else {
+                                alert('사용 가능합니다.');
+                            }
+
+                            if(data.emailExists) {
+                                alert('이메일이 이미 존재합니다.')
+                            }else {
+                                alert('사용 가능합니다.')
+                            }
+
+                            if(data.nickExists) {
+                                alert('닉네임이 이미 존재합니다.')
+                            }else {
+                                alert('사용 가능합니다.')
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        }));
+                }
+
+            document.querySelectorAll('.checkAllBtn').forEach(button => {
+                button.onclick = function() {
+                    checkUser(); // checkUser 함수 호출
+                };
+            });
+
+
+            }
+
+            // 아이디 중복 확인 함수
+            // function checkUid(field) {
+            //     const value = field.value.trim();
+            //
+            //     console.log('id::::'+value)
+            //
+            //     if(!value) {
+            //         alert('아이디를 입력해주세요')
+            //     }
+            //
+            //     fetch(`/sboard/user/check-user?value=${value}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.exists) {
+            //                 alert('아이디가 이미 존재합니다.');
+            //             } else {
+            //                 alert('사용 가능합니다.');
+            //             }
+            //         })
+            //         .catch(err => console.log(err));
+            // }
+
+            // 닉네임 중복 확인 함수
+            // function checkNick(field) {
+            //     const value = field.value.trim();
+            //
+            //     console.log('nick::::'+value)
+            //
+            //     if(!value) {
+            //         alert('닉네임을 입력해주세요')
+            //     }
+            //
+            //     fetch(`/sboard/user/check-user?value=${value}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.exists) {
+            //                 alert('닉네임이 이미 존재합니다.');
+            //             } else {
+            //                 alert('사용 가능합니다.');
+            //             }
+            //         })
+            //         .catch(err => console.log(err));
+            // }
+
+            // 이메일 중복 확인 함수
+            // function checkEmail(field) {
+            //     const value = field.value.trim();
+            //
+            //     console.log('email::::'+value)
+            //
+            //     if(!value) {
+            //         alert('이메일을 입력해주세요')
+            //     }
+            //
+            //     fetch(`/sboard/user/check-user?value=${value}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.exists) {
+            //                 alert('이메일이 이미 존재합니다.');
+            //             } else {
+            //                 alert('사용 가능합니다.');
+            //             }
+            //         })
+            //         .catch(err => console.log(err));
+            // }
+            //
+            //
+            // // 아이디 중복 확인 버튼 클릭 이벤트
+            // document.getElementById('checkUidBtn').onclick = function () {
+            //     const uid = document.getElementById('userUid');
+            //     checkUid(uid);
+            //
+            //    }
+            //
+            // //닉네임 중복 확인 버튼 클릭 이벤트
+            // document.getElementById('checkNickBtn').onclick = function () {
+            //     const nick = document.getElementById('userNick');
+            //     checkNick(nick);
+            // }
+            //
+            // //이메일 중복 확인 버튼 클릭 이벤트
+            // document.getElementById('checkEmailBtn').onclick = function () {
+            //     const email = document.getElementById('userEmail');
+            //     checkEmail(email);
+            // }
+            //
+            //
+            //
+            // //이메일 중복 확인 함수
+            // document.getElementById('checkEmail').onclick = function () {
+            //     const emailForm = formUser.email;  //이메일 입력 필드
+            //     checkEmail(emailForm, 'email');  //중복 확인 함수 호출
+            // }
+            //
+            // function checkEmail(field, type) {
+            //     const value = field.value;
+            //
+            //     fetch(`/sboard/user/check-email?value=${value}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.exists) {
+            //                 alert('아이디가 이미 존재합니다.');
+            //             } else {
+            //                 alert('사용 가능합니다.');
+            //             }
+            //         })
+            //         .catch(err => console.log(err))
+            // }
+            btnSubmit.onclick = (e) => {
+                e.preventDefault();
+
+                const uid = formUser.uid.value;
+                const name = formUser.name.value;
+                const pass = formUser.pass1.value;
+                const hp = formUser.hp.value;
+                const email = formUser.email.value;
+                const nick = formUser.nick.value;
+                const addr1 = formUser.addr1.value;
+                const addr2 = formUser.addr2.value;
+
+                //비밀번호 확인
+                if(pass != formUser.pass2.value) {
+                    alert('비밀번호가 일치하지 않습니다.')
+                    return;
+                }
+
+                // json 생성
+                const jsonData = {
+                    "uid": uid,
+                    "name": name,
+                    "pass": pass,
+                    "hp": hp,
+                    "email": email,
+                    "nick": nick,
+                    "addr1": addr1,
+                    "addr2": addr2
+                };
+
+                console.log(jsonData);
+
+                // 서버 전송
+                fetch('http://127.0.0.1:8080/sboard/user/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(jsonData) // <-- 반드시 JSON객체를 문자열로 변환
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('err');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        window.location.href="/user/login";
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+
+        }
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <h3>Board System</h3>
+        </header>
+        <main id="user">
+            <section class="register">
+
+                <form action="/user/login" method="post">
+                    <h2 class="tit">사이트 이용정보 입력</h2>
+                    <table border="1">
+                        <td>아이디</td>
+                        <td>
+                            <input type="text" id="userUid" name="uid" placeholder="아이디 입력"/>
+                            <button type="button" class="checkAllBtn"><img src="../img/chk_id.gif" alt="중복확인"/></button>
+                            <span class="uidResult"></span>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td>비밀번호</td>
+                            <td><input type="password" name="pass1" placeholder="비밀번호 입력"/></td>
+                        </tr>
+                        <tr>
+                            <td>비밀번호 확인</td>
+                            <td><input type="password" name="pass2" placeholder="비밀번호 입력 확인"/></td>
+                        </tr>
+                    </table>
+
+                    <h2 class="tit">개인정보 입력</h2>
+                    <table border="1">
+                        <tr>
+                            <td>이름</td>
+                            <td>
+                                <input type="text" name="name" placeholder="이름 입력"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>별명</td>
+                            <td>
+                                <p class="nickInfo">공백없는 한글, 영문, 숫자 입력</p>
+                                <input type="text" id="userNick" name="nick" placeholder="별명 입력"/>
+                                <button type="button" class="checkAllBtn"><img src="../img/chk_id.gif" alt="중복확인"/></button>
+                                <span class="nickResult"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>이메일</td>
+                            <td>
+                                <input type="email" id="userEmail" name="email" placeholder="이메일 입력"/>
+                                <button type="button" class="checkAllBtn"><img src="../img/chk_auth.gif" alt="인증번호 받기"/></button>
+                                <div class="auth">
+                                    <input type="text" name="auth" placeholder="인증번호 입력"/>
+                                    <button type="button" class="checkAllBtn"><img src="../img/chk_confirm.gif" alt="확인"/></button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>휴대폰</td>
+                            <td><input type="text" name="hp" placeholder="휴대폰 입력"/></td>
+                        </tr>
+                        <tr>
+                            <td>주소</td>
+                            <td>
+                                <input type="text" name="zip" placeholder="우편번호"/>
+                                <button type="button"><img src="../img/chk_post.gif" alt="우편번호찾기"/></button>
+                                <input type="text" name="addr1" placeholder="주소 검색"/>
+                                <input type="text" name="addr2" placeholder="상세주소 입력"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div>
+                        <a href="./login.html" class="btn btnCancel">취소</a>
+                        <input type="submit" value="회원가입" class="btn btnRegister"/>
+                    </div>
+
+                </form>
+
+            </section>
+        </main>
+        <footer>
+            <p>
+                <span class="copyright">Copyrightⓒ 김철학(개발에반하다.)</span>
+                <span class="version">v1.0.1</span>
+            </p>
+        </footer>
+    </div>    
+</body>
+</html>

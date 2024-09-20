@@ -1,0 +1,50 @@
+jwt:
+    issuer: simsj0413@naver.com
+    secret: fUvfBeplaf5Wb762FrMqpY1hDBdmfQQp
+logging:
+    file:
+        name: /logs/sboard.log
+    level:
+        jdbc:
+            resultsettable: info
+            sqlonly: info
+            sqltiming: info
+        org:
+            hibernate:
+                orm:
+                    jdbc:
+                        bind: trace
+                sql: debug
+        root: info
+server:
+    port: 8080
+    servlet:
+        context-path: /sboard
+spring:
+    application:
+        name: sboard
+        version: 0.0.1
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: "41Kimsj31!"
+        url: jdbc:mysql://localhost:3306/jboard
+        username: jboard
+    devtools:
+        livereload:
+            enabled: true
+    jpa:
+        database: mysql
+        hibernate:
+            ddl-auto: update
+            naming:
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        properties:
+            hibernate:
+                format_sql: true
+                show_sql: true
+    thymeleaf:
+        cache: false
+        check-template-location: true
+        enabled: true
+        prefix: classpath:/templates/
+        suffix: .html

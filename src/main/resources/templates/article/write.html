@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>글쓰기</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script>
+
+
+        window.onload = function(){
+
+            const btnSubmit = document.getElementsByName('submit')[0];
+            const formUser = document.getElementsByTagName('form')[0];
+
+
+            btnSubmit.onclick = (e) => {
+                e.preventDefault();
+
+                const uid = formUser.uid.value;
+                const name = formUser.name.value;
+                const pass = formUser.pass.value;
+                const hp = formUser.hp.value;
+                const email = formUser.email.value;
+                const nick = formUser.nick.value;
+                const addr1 = formUser.addr1.value;
+                const addr2 = formUser.addr2.value;
+
+                //비밀번호 확인
+                if(pass != formUser.passConfirm.value) {
+                    alert('비밀번호가 일치하지 않습니다.')
+                    return;
+                }
+
+                // json 생성
+                const jsonData = {
+                    "uid": uid,
+                    "name": name,
+                    "pass": pass,
+                    "hp": hp,
+                    "email": email,
+                    "nick": nick,
+                    "addr1": addr1,
+                    "addr2": addr2
+                };
+
+                console.log(jsonData);
+
+                // 서버 전송
+                fetch('http://127.0.0.1:8080/sboard/user/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(jsonData) // <-- 반드시 JSON객체를 문자열로 변환
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('err');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        window.location.href="/user1/login";
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <h3>Board System</h3>
+            <p>
+                <span>홍길동</span>님 반갑습니다.
+                <a href="#">[로그아웃]</a>
+            </p>
+        </header>
+        <main id="board">
+            <section class="write">
+                <nav>
+                    <h1>글쓰기</h1>
+                </nav>
+                <form action="#">
+                    <table border="0">                        
+                        <tr>
+                            <th>제목</th>
+                            <td><input type="text" name="title" placeholder="제목을 입력하세요."/></td>
+                        </tr>
+                        <tr>
+                            <th>내용</th>
+                            <td>
+                                <textarea name="content"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>파일</th>
+                            <td>
+                                <input type="file" name="file"/>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div>
+                        <a href="list.html" class="btn btnCancel">취소</a>
+                        <input type="submit" value="작성완료" class="btn btnComplete"/>
+                    </div>
+                </form>
+
+            </section>
+        </main>
+        <footer>
+            <p>
+                <span class="copyright">Copyrightⓒ 김철학(개발에반하다.)</span>
+                <span class="version">v1.0.1</span>
+            </p>
+        </footer>
+    </div>    
+</body>
+</html>

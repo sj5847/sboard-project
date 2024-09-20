@@ -20,34 +20,33 @@ import java.util.Map;
 @Log4j2
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user")
+
 public class UserController {
 
     private final UserService userService;
 
     private final AppInfo appInfo;
 
-//    @Value("${spring.application.version}")
-//    private String appVersion;
-
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     public String login(Model model) {
-
-        model.addAttribute("appVersion", appInfo);
+        log.info("login");
+        model.addAttribute("appInfo", appInfo);
         return "user/login";
     }
 
-    @GetMapping("/terms")
+    @GetMapping("/user/terms")
     public String terms() {
+
         return "user/terms";
     }
 
-    @GetMapping("/register")
+    @GetMapping("/user/register")
     public String register() {
+
         return "user/register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public @ResponseBody ResponseEntity register(@RequestBody UserDto userDto) {
         log.info(userDto);
         User user = userDto.toEntity();
@@ -57,7 +56,7 @@ public class UserController {
                 .body(user);
     }
 
-    @PostMapping("/check-user")
+    @PostMapping("/user/check-user")
     public ResponseEntity<?> checkUser(@RequestBody UserCheck userCheck) {
         boolean uidExists = userService.checkUid(userCheck.getUidExists());
         boolean emailExists = userService.checkEmail(userCheck.getEmailExists());
